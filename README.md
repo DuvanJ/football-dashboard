@@ -23,6 +23,7 @@ Football Dashboard es una aplicación web fullstack que muestra estadísticas en
 - 🔄 **Auto-refresh** cada 60 segundos
 - 🌍 **12 ligas disponibles** — Premier League, La Liga, Bundesliga, Serie A y más
 - 📱 **Responsive** — funciona en móvil y desktop
+- ✨ **Animaciones fluidas** — entrada en cascada, contadores animados y transiciones suaves
 - 🌙 **Dark mode** por defecto
 
 ## 🛠️ Tecnologías
@@ -32,6 +33,7 @@ Football Dashboard es una aplicación web fullstack que muestra estadísticas en
 - Tailwind CSS
 - Recharts
 - Axios
+- Motion (animaciones)
 
 ### Backend
 - FastAPI

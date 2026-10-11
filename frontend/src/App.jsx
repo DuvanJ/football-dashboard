@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { motion, AnimatePresence } from 'motion/react'
 import axios from 'axios'
 import Header from './components/Header'
 import StandingsTable from './components/StandingsTable'
@@ -21,10 +22,10 @@ function App() {
   const cargarDatos = async () => {
     setLoading(true)
     setError(null)
+    setStandings([])
     try {
       const res = await axios.get(`${API_URL}/standings/${liga}`)
       setStandings(res.data.standings[0].table)
-
       const matchRes = await axios.get(`${API_URL}/matches/${liga}`)
       const todosLosPartidos = matchRes.data.matches || []
       const recientes = todosLosPartidos
@@ -32,30 +33,18 @@ function App() {
         .slice(-8)
         .reverse()
       setMatches(recientes)
-
     } catch (err) {
       if (err.response) {
         switch (err.response.status) {
-          case 400:
-            setError('⚠️ Liga no permitida.')
-            break
-          case 403:
-            setError('🔒 Esta liga no está disponible en el plan gratuito.')
-            break
-          case 404:
-            setError('🔍 Liga no encontrada.')
-            break
-          case 429:
-            setError('⏳ Demasiadas solicitudes. Esperá un momento e intentá de nuevo.')
-            break
-          case 500:
-            setError('🔥 Error en el servidor. Intentá de nuevo más tarde.')
-            break
-          default:
-            setError('❌ Error inesperado. Intentá de nuevo.')
+          case 400: setError('⚠️ Liga no permitida.'); break
+          case 403: setError('🔒 Esta liga no está disponible en el plan gratuito.'); break
+          case 404: setError('🔍 Liga no encontrada.'); break
+          case 429: setError('⏳ Demasiadas solicitudes. Esperá un momento.'); break
+          case 500: setError('🔥 Error en el servidor. Intentá de nuevo más tarde.'); break
+          default: setError('❌ Error inesperado. Intentá de nuevo.')
         }
       } else if (err.request) {
-        setError('📡 No se pudo conectar al servidor. Verificá que el backend esté corriendo.')
+        setError('📡 No se pudo conectar al servidor.')
       } else {
         setError('❌ Error inesperado. Intentá de nuevo.')
       }
@@ -65,9 +54,7 @@ function App() {
 
   useEffect(() => {
     if (autoRefresh) {
-      intervalRef.current = setInterval(() => {
-        cargarDatos()
-      }, 60000)
+      intervalRef.current = setInterval(cargarDatos, 60000)
     } else {
       clearInterval(intervalRef.current)
     }
@@ -75,7 +62,7 @@ function App() {
   }, [autoRefresh, liga])
 
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div className="min-h-screen bg-zinc-950">
       <Header
         liga={liga}
         setLiga={setLiga}
@@ -88,11 +75,19 @@ function App() {
 
         {loading && <Skeleton />}
 
-        {error && (
-          <div className="bg-red-900 text-red-300 px-4 py-3 rounded-lg">
-            {error}
-          </div>
-        )}
+        <AnimatePresence>
+          {error && (
+            <motion.div
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.2 }}
+              className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-3 rounded-xl text-sm"
+            >
+              {error}
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {!loading && standings.length > 0 && (
           <>
@@ -104,11 +99,14 @@ function App() {
         )}
 
         {!loading && standings.length === 0 && !error && (
-          <div className="text-center text-gray-500 py-20 text-xl">
-            Seleccioná una liga y hacé clic en Cargar 👆
-          </div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-center text-zinc-600 py-20 text-base"
+          >
+            Seleccioná una liga y hacé clic en Cargar
+          </motion.div>
         )}
-
       </div>
     </div>
   )
