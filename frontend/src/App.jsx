@@ -7,6 +7,8 @@ import StatsCards from './components/StatsCards'
 import RecentMatches from './components/RecentMatches'
 import Skeleton from './components/Skeleton'
 
+const API_URL = 'https://football-dashboard-production.up.railway.app'
+
 function App() {
   const [liga, setLiga] = useState('PD')
   const [standings, setStandings] = useState([])
@@ -20,10 +22,10 @@ function App() {
     setLoading(true)
     setError(null)
     try {
-      const res = await axios.get(`http://localhost:8000/standings/${liga}`)
+      const res = await axios.get(`${API_URL}/standings/${liga}`)
       setStandings(res.data.standings[0].table)
 
-      const matchRes = await axios.get(`http://localhost:8000/matches/${liga}`)
+      const matchRes = await axios.get(`${API_URL}/matches/${liga}`)
       const todosLosPartidos = matchRes.data.matches || []
       const recientes = todosLosPartidos
         .filter(m => m.score.fullTime.home !== null)
