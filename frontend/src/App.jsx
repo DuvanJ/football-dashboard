@@ -8,7 +8,7 @@ import StatsCards from './components/StatsCards'
 import RecentMatches from './components/RecentMatches'
 import Skeleton from './components/Skeleton'
 
-const API_URL = 'https://football-dashboard-production.up.railway.app'
+const API_URL = 'https://football-dashboard-bwn9.onrender.com'
 
 function App() {
   const [liga, setLiga] = useState('PD')
