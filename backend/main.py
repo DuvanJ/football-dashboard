@@ -21,9 +21,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-API_KEY = os.getenv("FOOTBALL_API_KEY")
 BASE_URL = "https://api.football-data.org/v4"
-HEADERS = {"X-Auth-Token": API_KEY}
+
+def get_headers():
+    return {"X-Auth-Token": os.getenv("FOOTBALL_API_KEY")}
 
 LIGAS_PERMITIDAS = {
     "PL", "PD", "BL1", "SA", "FL1",
