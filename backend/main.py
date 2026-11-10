@@ -37,7 +37,7 @@ def get_standings(request: Request, competition_code: str):
     if competition_code not in LIGAS_PERMITIDAS:
         raise HTTPException(status_code=400, detail="Liga no permitida")
     url = f"{BASE_URL}/competitions/{competition_code}/standings"
-    response = requests.get(url, headers=HEADERS)
+    response = requests.get(url, headers=get_headers())
     if response.status_code == 403:
         raise HTTPException(status_code=403, detail="Liga no disponible en tu plan")
     if response.status_code == 404:
@@ -54,7 +54,7 @@ def get_matches(request: Request, competition_code: str):
     if competition_code not in LIGAS_PERMITIDAS:
         raise HTTPException(status_code=400, detail="Liga no permitida")
     url = f"{BASE_URL}/competitions/{competition_code}/matches?status=FINISHED"
-    response = requests.get(url, headers=HEADERS)
+    response = requests.get(url, headers=get_headers())
     if response.status_code == 403:
         raise HTTPException(status_code=403, detail="Liga no disponible en tu plan")
     if response.status_code == 404:
